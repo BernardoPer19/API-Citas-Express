@@ -1,5 +1,5 @@
 import { Cita } from "../model/citas.model.js";
-import { CitaSchema } from "../schema/movies-schema.js";
+import { CitaSchema } from "../schema/citass-schema.js";
 
 export class CitaController {
   static async getData(req, res) {
@@ -40,6 +40,33 @@ export class CitaController {
     } catch (error) {
       return res.status(500).json({
         error: "Error interno del servidor - No se pudo eliminar la cita",
+      });
+    }
+  }
+
+  static async updateData(req, res) {
+    try {
+      const { id } = req.params;
+
+      const parsedData = CitaSchema.safeParse(req.body);
+      if (!parsedData.success) {
+        return res.status(400).json({
+          error: "Datos inválidos",
+          detalles: parsedData.error.errors,
+        });
+      }
+
+      const citaExistente = await Cita.obtenerCitaPorId(id);
+      if (!citaExistente) {
+        return res.status(404).json({ error: "Cita no encontrada" });
+      }
+
+      const resultado = await Cita.actualizarCita(id, parsedData.data);
+      return res.status(200).json(resultado);
+    } catch (error) {
+      console.error("Error actualizando cita:", error);
+      return res.status(500).json({
+        error: "Error interno del servidor - No se pudo actualizar la cita",
       });
     }
   }

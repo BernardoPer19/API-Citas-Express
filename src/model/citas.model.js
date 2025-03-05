@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { CitaSchema } from "../schema/movies-schema.js";
+import { CitaSchema } from "../schema/citass-schema.js";
 import { citas } from "../data/data.js";
 
 export class Cita {
